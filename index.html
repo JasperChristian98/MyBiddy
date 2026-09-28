@@ -27,10 +27,14 @@
       <div class="section-head"><span>01</span><h2>Set up the game</h2></div>
       <p class="muted">Two to six people. The referee controls this screen; players just shout football clubs and regret their decisions.</p>
       <div class="setup-grid">
-        <label>Player names (one per line)
-          <textarea id="playerNames" rows="6">Jasper
-Player 2</textarea>
-        </label>
+        <div class="player-name-field">
+          <div class="player-name-heading"><label>Players</label><span id="playerNameCount" class="muted">2 of 6</span></div>
+          <div id="playerNameList" class="player-name-list">
+            <div class="player-name-row"><span class="player-number" aria-hidden="true">01</span><input class="player-name-input" type="text" value="Player 1" maxlength="32" autocomplete="off" aria-label="Player 1 name"><button class="remove-player" type="button" aria-label="Remove player 1" title="Remove player 1">×</button></div>
+            <div class="player-name-row"><span class="player-number" aria-hidden="true">02</span><input class="player-name-input" type="text" value="Player 2" maxlength="32" autocomplete="off" aria-label="Player 2 name"><button class="remove-player" type="button" aria-label="Remove player 2" title="Remove player 2">×</button></div>
+          </div>
+          <button id="addPlayerBtn" class="add-player" type="button">＋ Add player</button>
+        </div>
         <div>
           <label>First to how many points?
             <input id="targetPoints" type="number" min="1" max="100" value="10">

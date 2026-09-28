@@ -258,8 +258,43 @@ function drawRoundPlayer(avoidId=null){
   updateBid();saveGameSession();
 }
 function startRound(){state.round+=1;state.starter=(state.round-1)%state.names.length;$('roundLabel').textContent=`ROUND ${state.round}`;$('targetLabel').textContent=`First to ${state.target} points`;drawRoundPlayer();scorebar();}
+$('addPlayerBtn').addEventListener('click',()=>{
+  const list=$('playerNameList');
+  if(list.children.length>=6)return;
+  const row=document.createElement('div');
+  row.className='player-name-row';
+  row.innerHTML='<span class="player-number" aria-hidden="true"></span><input class="player-name-input" type="text" maxlength="32" autocomplete="off"><button class="remove-player" type="button">×</button>';
+  list.appendChild(row);
+  updatePlayerNameControls();
+  const input=row.querySelector('input');
+  input.focus();
+  input.select();
+});
+$('playerNameList').addEventListener('click',event=>{
+  const removeButton=event.target.closest('.remove-player');
+  const list=$('playerNameList');
+  if(!removeButton||list.children.length<=2)return;
+  removeButton.closest('.player-name-row').remove();
+  updatePlayerNameControls();
+});
+function updatePlayerNameControls(){
+  const rows=[...$('playerNameList').querySelectorAll('.player-name-row')];
+  rows.forEach((row,index)=>{
+    const number=String(index+1).padStart(2,'0');
+    const input=row.querySelector('input');
+    const removeButton=row.querySelector('.remove-player');
+    row.querySelector('.player-number').textContent=number;
+    input.setAttribute('aria-label',`Player ${index+1} name`);
+    removeButton.disabled=rows.length<=2;
+    removeButton.setAttribute('aria-label',`Remove player ${index+1}`);
+    removeButton.title=`Remove player ${index+1}`;
+  });
+  $('playerNameCount').textContent=`${rows.length} of 6 players`;
+  $('addPlayerBtn').disabled=rows.length>=6;
+}
+updatePlayerNameControls();
 $('startBtn').addEventListener('click',()=>{
-  const names=$('playerNames').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const names=[...$('playerNameList').querySelectorAll('.player-name-input')].map(input=>input.value.trim()).filter(Boolean);
   const target=Number($('targetPoints').value);
   if(names.length<2 || names.length>6)return alert('Enter between 2 and 6 player names.');
   if(new Set(names.map(norm)).size!==names.length)return alert('Player names must be different.');
