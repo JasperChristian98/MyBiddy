@@ -61,11 +61,11 @@ If no players match, you get an obvious empty-pool message instead of a crash; w
 
 GitHub Pages supports one personal/organization site and a separate **project site for each repository**. If you already use `YOURNAME.github.io`, make **another repository**, e.g. `my-biddy-aunt`:
 
-1. On GitHub, create a **new public repository** called `my-biddy-aunt`. Don't replace your existing Pages repo.
-2. Upload `index.html`, `app.js`, `styles.css`, `.nojekyll` and `data/players.json` into the **repository root / data folder**. The `scripts/` and README are optional to host, but useful in the repo. You do **not** need to push `data/cache/`, backups or contact-email environment variables.
-3. Under that repository's **Settings → Pages → Build and deployment**, select **Deploy from a branch**, branch **main**, folder **/(root)**. Save.
-4. It should publish at `https://YOUR-GITHUB-USERNAME.github.io/my-biddy-aunt/` (unless your personal Pages custom domain changes the default domain behavior). Your previous website remains untouched.
-5. When you scrape more players locally, update **only `data/players.json`** in this repo and push. Pages will publish the updated snapshot; the web app does not scrape live.
+1. On GitHub, create a **new repository** called `my-biddy-aunt`. Don't replace your existing Pages repo.
+2. Push this project to the repository's `main` branch, including `data/players.json`. The workflow publishes only the app files and player JSON; scraper scripts, caches and backups are not included in the site artifact.
+3. Under **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**.
+4. Push to `main` (or run **Actions → Deploy GitHub Pages → Run workflow**). The first run publishes at `https://YOUR-GITHUB-USERNAME.github.io/my-biddy-aunt/` (unless your personal Pages custom domain changes the default domain behavior). Your previous website remains untouched.
+5. When you scrape more players locally, update `data/players.json` and push. Pages republishes that snapshot; the web app does not scrape live.
 
 Every asset uses **relative paths** (`./app.js`, `./data/players.json`) so the site works beneath `/my-biddy-aunt/` as well as localhost.
 
