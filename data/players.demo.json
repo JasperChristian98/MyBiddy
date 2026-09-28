@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "generated_at": "sample",
+  "rules": {
+    "senior_clubs_only": true,
+    "loans_count": true,
+    "minimum_league_appearances": 1,
+    "repeat_spells_count_once": true
+  },
+  "player_count": 3,
+  "players": [
+    {
+      "id": "sample-journeyman-a",
+      "name": "Sample Player A",
+      "position": "Forward",
+      "wikipedia_url": "https://en.wikipedia.org/",
+      "eligible_club_count": 4,
+      "eligible_clubs": [
+        {
+          "name": "Northbridge FC",
+          "league_appearances": 42,
+          "first_year": 2002,
+          "last_year": 2004,
+          "loan_spells": 0
+        },
+        {
+          "name": "Riverside City",
+          "league_appearances": 61,
+          "first_year": 2004,
+          "last_year": 2007,
+          "loan_spells": 0
+        },
+        {
+          "name": "Athletic Borough",
+          "league_appearances": 18,
+          "first_year": 2007,
+          "last_year": 2008,
+          "loan_spells": 1
+        },
+        {
+          "name": "United Town",
+          "league_appearances": 73,
+          "first_year": 2008,
+          "last_year": 2012,
+          "loan_spells": 0
+        }
+      ],
+      "raw_spells": []
+    },
+    {
+      "id": "sample-journeyman-b",
+      "name": "Sample Player B",
+      "position": "Midfielder",
+      "wikipedia_url": "https://en.wikipedia.org/",
+      "eligible_club_count": 3,
+      "eligible_clubs": [
+        {
+          "name": "Albion",
+          "league_appearances": 55,
+          "first_year": 1998,
+          "last_year": 2001,
+          "loan_spells": 0
+        },
+        {
+          "name": "County",
+          "league_appearances": 27,
+          "first_year": 2001,
+          "last_year": 2003,
+          "loan_spells": 0
+        },
+        {
+          "name": "Sporting Club",
+          "league_appearances": 88,
+          "first_year": 2003,
+          "last_year": 2008,
+          "loan_spells": 0
+        }
+      ],
+      "raw_spells": []
+    },
+    {
+      "id": "sample-journeyman-c",
+      "name": "Sample Player C",
+      "position": "Defender",
+      "wikipedia_url": "https://en.wikipedia.org/",
+      "eligible_club_count": 5,
+      "eligible_clubs": [
+        {
+          "name": "City Rovers",
+          "league_appearances": 22,
+          "first_year": 2010,
+          "last_year": 2012,
+          "loan_spells": 0
+        },
+        {
+          "name": "Wanderers",
+          "league_appearances": 31,
+          "first_year": 2012,
+          "last_year": 2014,
+          "loan_spells": 0
+        },
+        {
+          "name": "Real Sporting Town",
+          "league_appearances": 9,
+          "first_year": 2014,
+          "last_year": 2015,
+          "loan_spells": 1
+        },
+        {
+          "name": "Olympic FC",
+          "league_appearances": 40,
+          "first_year": 2015,
+          "last_year": 2018,
+          "loan_spells": 0
+        },
+        {
+          "name": "Dynamo Borough",
+          "league_appearances": 24,
+          "first_year": 2018,
+          "last_year": 2020,
+          "loan_spells": 0
+        }
+      ],
+      "raw_spells": []
+    }
+  ]
+}

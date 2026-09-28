@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+data/cache/
+data/backups/
+data/premier_league_processed.json
+data/premier_league_candidates.json
+*.tmp

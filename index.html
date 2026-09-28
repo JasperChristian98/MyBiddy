@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b0e0d">
+  <meta name="description" content="My Biddy Aunt: the football club bidding game and referee console.">
+  <title>My Biddy Aunt — Referee Desk</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main>
+  <header class="masthead">
+    <div class="eyebrow">THE OFFICIAL UNOFFICIAL REFEREE DESK</div>
+    <h1>MY BIDDY AUNT<span class="accent">.</span></h1>
+    <p class="lede">Bid the clubs. Call the bluff. One referee, absolutely no mercy.</p>
+  </header>
+  <nav class="tabs" aria-label="Main navigation">
+    <button class="tab active" id="deskTab" type="button">⚑ Referee desk</button>
+    <button class="tab" id="explorerTab" type="button">⌕ Player Explorer</button>
+    <button class="tab" id="poolTab" type="button">☷ Queue &amp; pool <span id="queueBadge" class="count-badge">0</span></button>
+  </nav>
+  <div id="toast" role="status" aria-live="polite" class="toast hidden"></div>
+
+  <section id="deskView">
+    <section id="setup" class="panel">
+      <div class="section-head"><span>01</span><h2>Set up the game</h2></div>
+      <p class="muted">Two to six people. The referee controls this screen; players just shout football clubs and regret their decisions.</p>
+      <div class="setup-grid">
+        <label>Player names (one per line)
+          <textarea id="playerNames" rows="6">Jasper
+Player 2</textarea>
+        </label>
+        <div>
+          <label>First to how many points?
+            <input id="targetPoints" type="number" min="1" max="100" value="10">
+          </label>
+          <div class="mini-panel">
+            <div class="mini-title">Next players</div>
+            <div id="deskQueuePreview" class="muted">Queue empty — we'll draw from your pool.</div>
+            <button type="button" class="secondary small" data-open-pool>Manage queue &amp; filters →</button>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-title">Random pool</div>
+            <div id="deskPoolSummary" class="muted">Loading…</div>
+          </div>
+        </div>
+      </div>
+      <div class="actions"><button id="startBtn" class="primary" type="button" disabled>Start the game →</button><button id="demoBtn" type="button" class="hidden">Load fictional demo</button></div>
+      <p id="datasetStatus" class="muted" aria-live="polite">Loading player database…</p>
+    </section>
+
+    <section id="game" class="hidden">
+      <div class="topline"><span id="roundLabel" class="eyebrow"></span><div class="topline-actions"><span id="targetLabel" class="muted"></span><button id="endGameBtn" type="button" class="danger compact">End game</button></div></div>
+      <div id="scorebar" class="scorebar"></div>
+      <section class="hero-card">
+        <div class="hero-top"><span id="playerSource" class="pill">RANDOM DRAW</span><span id="queueNext" class="muted"></span></div>
+        <h2 id="footballer">—</h2>
+        <p id="footballerMeta"></p>
+        <div id="starter" class="starter"></div>
+        <div class="actions"><button id="skipBtn" type="button" class="secondary">↷ Skip player (no points)</button><button type="button" class="ghost" data-open-pool>Adjust pool &amp; queue ↗</button></div>
+      </section>
+      <section id="noPlayer" class="panel hidden">
+        <h2>No footballers match this pool</h2><p>Try widening the filters or adding somebody to your queue. No points have been awarded.</p>
+        <div class="actions"><button type="button" class="primary" data-open-pool>Change filters</button><button type="button" id="drawAgain">Try drawing again</button></div>
+      </section>
+      <section id="bidding" class="panel hidden">
+        <div id="turn" class="turn"></div><p id="lastBid" class="muted">No bids yet.</p>
+        <div class="bid-controls"><button type="button" id="minus" aria-label="Decrease bid">−</button><div class="bid-number" id="bidNumber">1</div><button type="button" id="plus" aria-label="Increase bid">+</button></div>
+        <p id="bidLimit" class="bid-limit" aria-live="polite"></p>
+        <div class="actions"><button id="bidBtn" type="button" class="primary">Record bid</button><button id="challengeBtn" type="button" class="danger" disabled>Call their bluff</button></div>
+      </section>
+      <section id="challenge" class="panel hidden">
+        <div class="section-head"><span>02</span><h2 id="challengeTitle">Name those clubs</h2></div>
+        <p id="challengeHelp" class="muted"></p>
+        <div class="progress"><div id="progressFill"></div></div><div id="progressText" class="progress-text"></div>
+        <div class="ref-note">REFEREE ONLY — click each club as it is correctly named. A wrong club, or a repeat, ends the bid.</div>
+        <label for="clubSearch">Find a club on the answer sheet</label>
+        <input type="search" id="clubSearch" placeholder="Filter clubs to click…" autocomplete="off">
+        <div id="clubTiles" class="club-grid"></div>
+        <h3>Accepted so far</h3><div id="namedClubs" class="named-clubs muted">None yet.</div>
+        <div class="actions"><button type="button" id="wrongBtn" class="danger">✕ Wrong club — end round</button><button type="button" id="undoBtn">↶ Undo last tick</button></div>
+        <p class="muted tiny">The answer sheet is based on the scraped Wikipedia snapshot; consult the source if there's a dispute: <a id="wikiLink" target="_blank" rel="noopener noreferrer">Wikipedia ↗</a>.</p>
+      </section>
+      <section id="result" class="panel hidden">
+        <div id="resultBanner" class="result-banner"></div><p id="resultExplanation"></p><div id="roundAwards" class="awards"></div>
+        <details><summary>Full answer sheet</summary><div id="allAnswers"></div></details>
+        <button id="nextBtn" type="button" class="primary">Next round →</button>
+      </section>
+      <section id="finished" class="panel hidden">
+        <div class="eyebrow">FULL TIME</div><h2 id="winnerTitle"></h2><p id="winnerDesc"></p><button id="restartBtn" type="button" class="primary">New game</button>
+      </section>
+    </section>
+  </section>
+
+  <section id="explorerView" class="hidden">
+    <section class="panel">
+      <div class="section-head"><span>⌕</span><h2>Player Explorer</h2></div><p>Search Premier League alumni by name, career clubs, position, years and senior appearances. Queue anyone you fancy.</p>
+      <div class="filter-grid">
+        <label>Player name<input id="searchName" placeholder="e.g. James Milner"></label>
+        <label>Any career club<input id="searchClub" placeholder="e.g. Aston Villa"></label>
+        <label>Position<select id="searchPosition"><option value="">Any position</option><option value="goalkeeper">Goalkeeper</option><option value="defender">Defender</option><option value="midfielder">Midfielder</option><option value="forward">Forward</option><option value="striker">Striker</option><option value="winger">Winger</option></select></label>
+        <label>Played from<input id="yearFrom" type="number" min="1870" max="2100" placeholder="1992"></label>
+        <label>Played until<input id="yearTo" type="number" min="1870" max="2100" placeholder="2026"></label>
+        <label>Min senior league apps<input id="minApps" type="number" min="0" placeholder="Any"></label>
+        <label>Max senior league apps<input id="maxApps" type="number" min="0" placeholder="Any"></label>
+        <label>Min eligible clubs<input id="minClubs" type="number" min="1" placeholder="Any"></label>
+        <label>Sort by<select id="sortPlayers"><option value="appearances">Total senior league apps</option><option value="pl_appearances">PL league apps (if available)</option><option value="first_year">Career start</option><option value="last_year">Last career year</option><option value="career_years">Career duration</option><option value="clubs">Eligible clubs</option><option value="name">Name</option></select></label>
+        <label>Order<select id="sortOrder"><option value="desc">Highest / latest first</option><option value="asc">Lowest / earliest first</option></select></label>
+      </div>
+      <div class="actions"><button id="applyFilters" type="button" class="primary">Search</button><button id="resetFilters" type="button">Clear filters</button></div>
+      <p class="muted" id="explorerCount" aria-live="polite"></p>
+      <div class="results-scroll"><table class="results"><thead><tr><th>Player</th><th>Position</th><th>Career</th><th>Senior apps</th><th>PL apps</th><th>Clubs</th><th>Queue</th></tr></thead><tbody id="playerRows"></tbody></table></div>
+      <div class="pager"><button type="button" id="prevPage">← Previous</button><span id="pageLabel"></span><button type="button" id="nextPage">Next →</button></div>
+    </section>
+    <section id="playerDetail" class="panel hidden"><h2 id="detailName"></h2><p id="detailMeta" class="muted"></p><div id="detailClubs"></div>
+      <div class="actions"><button type="button" id="queuePlayer" class="primary">+ Add to queue</button><button type="button" id="queueNextPlayer">↑ Play next</button><a id="detailWiki" target="_blank" rel="noopener noreferrer">Wikipedia source ↗</a></div><p id="pickConfirmation" class="muted" aria-live="polite"></p>
+    </section>
+  </section>
+
+  <section id="poolView" class="hidden">
+    <section class="panel">
+      <div class="section-head"><span>☷</span><h2>Upcoming queue</h2></div>
+      <p class="muted">Queue always wins. When it's empty, the next player is chosen randomly from your filtered pool. This queue is saved in this browser.</p>
+      <label for="queueSearch">Quick add: search names or clubs</label><input id="queueSearch" type="search" placeholder="Search e.g. Milner or Liverpool…" autocomplete="off"><div id="quickResults" class="quick-results"></div>
+      <div id="queueItems" class="queue-list"></div>
+      <div class="actions"><button id="clearQueue" type="button" class="ghost">Clear queue</button><button id="browseExplorer" type="button" class="secondary">Open full Player Explorer →</button></div>
+    </section>
+    <section class="panel">
+      <div class="section-head"><span>♟</span><h2>Random player pool</h2></div>
+      <p>Set the difficulty for those occasions when nobody's queued. These filters affect random picks only, not your queue.</p>
+      <div class="preset-row" id="presetButtons">
+        <button type="button" class="preset" data-preset="familiar">Familiar faces</button>
+        <button type="button" class="preset" data-preset="regular">Regulars</button>
+        <button type="button" class="preset" data-preset="wide">Deep cuts</button>
+        <button type="button" class="preset" data-preset="all">Anything goes</button>
+      </div>
+      <div class="filter-grid">
+        <label>Rank by<select id="poolRank"><option value="senior">Total senior league appearances</option><option value="pl">Premier League appearances (only if imported)</option></select></label>
+        <label>Take top<select id="poolTop"><option value="100">100</option><option value="250">250</option><option value="500">500</option><option value="1000">1,000</option><option value="0">All matching</option></select></label>
+        <label>Min senior appearances<input id="poolMinApps" type="number" min="0" step="25"></label>
+        <label>Min verified PL appearances<input id="poolMinPL" type="number" min="0" placeholder="Optional"></label>
+        <label>Min qualifying clubs<input id="poolMinClubs" type="number" min="2" max="50" value="3"></label>
+        <label>Position<select id="poolPosition"><option value="">Any position</option><option value="goalkeeper">Goalkeeper</option><option value="defender">Defender</option><option value="midfielder">Midfielder</option><option value="forward">Forward</option><option value="striker">Striker</option><option value="winger">Winger</option></select></label>
+        <label>Career overlaps from<input id="poolYearFrom" type="number" min="1870" max="2100" placeholder="1992"></label>
+        <label>Career overlaps until<input id="poolYearTo" type="number" min="1870" max="2100" placeholder="Any"></label>
+      </div>
+      <div class="pool-status"><strong id="poolCount">—</strong><span id="poolNote"></span></div>
+      <p class="muted tiny">Appearance totals are a rough familiarity proxy, not an objective fame ranking. Until separate PL statistics are imported, the default ranks by <em>all senior domestic league</em> appearances.</p>
+      <button type="button" id="backToDesk" class="primary">← Back to referee desk</button>
+    </section>
+  </section>
+  <footer>Premier League alumni · Every qualifying senior career club counts · Loans count · One club per player</footer>
+</main>
+<script src="./app.js?v=4.1" defer></script>
+</body>
+</html>
